@@ -95,7 +95,7 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
             }
         }
 
-        fun startUdapting(cb : () -> Unit) {
+        fun startUpdating(cb : () -> Unit) {
             if (dir == 0f) {
                 dir = 1f - 2 * prevScale
                 cb()
@@ -129,5 +129,50 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
                 animated = false
             }
         }
+    }
+
+    data class SARLNode(var i : Int, val state : State = State()) {
+
+        private var next : SARLNode? = null
+        private var prev : SARLNode? = null
+
+        init {
+
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = SARLNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawSARLNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : SARLNode {
+            var curr : SARLNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+
     }
 }
