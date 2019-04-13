@@ -20,7 +20,9 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#673AB7")
 val backColor : Int = Color.parseColor("#BDBDBD")
-val lineDeg : Float = 90f
+val lineDeg : Float = 180f
+val parts : Int = 2
+val rotDeg : Float = 90f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -31,3 +33,35 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+fun Int.sjf() : Float = 1f - 2 * (this % 2)
+
+fun Canvas.drawRotatingLine(i : Int, sc : Float, xGap : Float, paint : Paint) {
+    save()
+    translate(0f, -xGap * i - xGap * sc.divideScale(1, 2))
+    rotate(180f * i.sjf() * sc.divideScale(0, 2))
+    drawLine(0f, 0f, -xGap * i.sjf(), 0f, paint)
+    restore()
+}
+
+fun Canvas.drawSARLNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    val xGap : Float = (2 * size) / lines
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(rotDeg * sc2)
+    save()
+    translate(0f, size)
+    for (j in 0..(lines - 1)) {
+        drawRotatingLine(j, sc1.divideScale(j, lines), xGap, paint)
+    }
+    restore()
+    restore()
+}
