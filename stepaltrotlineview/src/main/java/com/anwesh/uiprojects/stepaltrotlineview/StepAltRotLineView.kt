@@ -38,7 +38,7 @@ fun Int.sjf() : Float = 1f - 2 * (this % 2)
 fun Canvas.drawRotatingLine(i : Int, sc : Float, xGap : Float, paint : Paint) {
     save()
     translate(0f, -xGap * i - xGap * sc.divideScale(1, 2))
-    rotate(180f * i.sjf() * sc.divideScale(0, 2))
+    rotate(lineDeg * i.sjf() * sc.divideScale(0, 2))
     drawLine(0f, 0f, -xGap * i.sjf(), 0f, paint)
     restore()
 }
@@ -59,6 +59,7 @@ fun Canvas.drawSARLNode(i : Int, scale : Float, paint : Paint) {
     rotate(rotDeg * sc2)
     save()
     translate(0f, size)
+    drawLine(0f, 0f, -size, 0f, paint)
     for (j in 0..(lines - 1)) {
         drawRotatingLine(j, sc1.divideScale(j, lines), xGap, paint)
     }
