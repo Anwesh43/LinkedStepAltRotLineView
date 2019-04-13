@@ -222,4 +222,12 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : StepAltRotLineView {
+            val view : StepAltRotLineView = StepAltRotLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
