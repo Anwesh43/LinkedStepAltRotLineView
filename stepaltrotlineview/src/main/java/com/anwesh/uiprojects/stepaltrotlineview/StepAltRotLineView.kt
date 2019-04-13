@@ -23,6 +23,7 @@ val backColor : Int = Color.parseColor("#BDBDBD")
 val lineDeg : Float = 180f
 val parts : Int = 2
 val rotDeg : Float = 90f
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -93,7 +94,7 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            scale += scale.updateValue(dir, lines * parts, 1)
+            scale += scale.updateValue(dir, lines * parts, parts)
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
@@ -117,7 +118,7 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
         fun animate(cb : () -> Unit) {
             cb()
             try {
-                Thread.sleep(50)
+                Thread.sleep(delay)
                 view.invalidate()
             } catch(ex : Exception) {
 
