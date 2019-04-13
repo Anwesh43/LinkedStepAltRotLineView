@@ -102,4 +102,32 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class Animator(var view : View) {
+
+        private var animated : Boolean = false
+
+        fun animate(cb : () -> Unit) {
+            cb()
+            try {
+                Thread.sleep(50)
+                view.invalidate()
+            } catch(ex : Exception) {
+
+            }
+        }
+
+        fun start() {
+            if (!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+
+        fun stop() {
+            if (animated) {
+                animated = false
+            }
+        }
+    }
 }
