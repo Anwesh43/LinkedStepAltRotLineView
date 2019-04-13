@@ -59,9 +59,13 @@ fun Canvas.drawSARLNode(i : Int, scale : Float, paint : Paint) {
     rotate(rotDeg * sc2)
     save()
     translate(0f, size)
-    drawLine(0f, 0f, -size, 0f, paint)
+    drawLine(0f, 0f,0f, -2 * size,paint)
+    drawLine(0f, 0f, -xGap, 0f, paint)
     for (j in 0..(lines - 1)) {
-        drawRotatingLine(j, sc1.divideScale(j, lines), xGap, paint)
+        val sc : Float = sc1.divideScale(j, lines)
+        if (sc > 0) {
+            drawRotatingLine(j, sc1.divideScale(j, lines), xGap, paint)
+        }
     }
     restore()
     restore()
@@ -140,7 +144,7 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
         private var prev : SARLNode? = null
 
         init {
-
+            addNeighbor()
         }
 
         fun addNeighbor() {
