@@ -198,4 +198,26 @@ class StepAltRotLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : StepAltRotLineView) {
+
+        private val animator : Animator = Animator(view)
+        private var sarl : StepAltRotLine = StepAltRotLine(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            sarl.draw(canvas, paint)
+            animator.animate {
+                sarl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            sarl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
